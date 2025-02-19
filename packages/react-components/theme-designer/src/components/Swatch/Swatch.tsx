@@ -124,7 +124,7 @@ const CalendarLtrIcon = bundleIcon(CalendarLtrFilled, CalendarLtrRegular);
     3) Note that the spinner was removed since it was causing confusing with the loading state of the page
 */
 
-export const Demo: React.FC<ContentProps> = props => {
+export const Swatch: React.FC<ContentProps> = props => {
   const stickerSheetStyles = useStyles();
   const dropdownId = useId('dropdown-default');
 
