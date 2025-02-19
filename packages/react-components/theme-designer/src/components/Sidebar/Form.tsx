@@ -3,18 +3,15 @@ import * as React from 'react';
 import { makeStyles } from '@griffel/react';
 import { useThemeDesigner } from '../../Context/ThemeDesignerContext';
 import {
-  Accordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
   Button,
   Input,
   Slider,
   tokens,
   useId,
   Field,
-  Text,
-  Subtitle2Stronger
+  Subtitle2Stronger,
+  Subtitle2,
+  Caption1
 } from '@fluentui/react-components';
 import { defaultThemePlaceholderName } from '../../Context/ThemeDesignerContext';
 import { useDebounce } from '../../utils/useDebounce';
@@ -22,6 +19,13 @@ import { useDebounce } from '../../utils/useDebounce';
 const useStyles = makeStyles({
   root: {
     backgroundColor: tokens.colorNeutralBackground2,
+    padding: '12px'
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalL,
+    paddingTop: '12px',
   },
   inputs: {
     display: 'flex',
@@ -41,6 +45,7 @@ const useStyles = makeStyles({
     display: 'grid',
     gridTemplateColumns: '110px 100px',
     columnGap: tokens.spacingVerticalL,
+    paddingBottom: '12px'
   },
   colorPicker: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
@@ -66,6 +71,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gap: '2px',
     maxWidth: '400px',
+    paddingBottom: '12px',
   },
   export: {
     alignItems: 'center',
@@ -73,9 +79,6 @@ const useStyles = makeStyles({
     justifyContent: 'flex-end',
     paddingRight: '20px',
   },
-  startHere: {
-    padding: '12px 12px 0 12px',
-  }
 });
 
 const DELAY_INPUT = 20;
@@ -150,93 +153,85 @@ export const Form: React.FC = () => {
 
   return (
     <div className={styles.root} role="tabpanel" aria-labelledby="Edit">
-      <div className={styles.startHere}>
-        <Subtitle2Stronger as="h2">
-          Start Here
-        </Subtitle2Stronger>
+      <Subtitle2Stronger as="h2">
+        Start Here
+      </Subtitle2Stronger>
+      <div className={styles.header}>
+        <Subtitle2>Step 1 - Color settings</Subtitle2>
+        <Caption1 as="h6">Use the Color Picker to select a color or enter a hex value in the text box below to generate a theme. Adjust the Hue Torsion and Vibrancy using the sliders below for further refinement.</Caption1>
       </div>
-      <Accordion defaultOpenItems={['1']} collapsible>
-        <AccordionItem value="1">
-          <AccordionHeader size="large">Step 1 - Color settings</AccordionHeader>
-          <AccordionPanel className={styles.accordionContainer}>
-            <Text as="h6">Use the Color Picker to select a color or enter a hex value in the text box below to generate a theme. Adjust the Hue Torsion and Vibrancy using the sliders below for further refinement.</Text>
-            <div className={styles.inputs}>
-              <div className={styles.labels}>
-                <Field label="Key color value">
-                  <Input
-                    appearance="outline"
-                    value={keyColor}
-                    onChange={handleKeyColorChange}
-                    maxLength={7}
-                    onBlur={handleKeyColorBlur}
-                    style={{ width: '100px' }}
-                    />
-                  </Field>
-                  <Field label="Color Picker">
-                    <div className={styles.colorPicker} style={{ backgroundColor: keyColor }}>
-                      <input
-                        className={styles.color}
-                        type="color"
-                        id={sidebarId + 'keyColor Color'}
-                        onChange={handleKeyColorChange}
-                      />
-                  </div>
-                </Field>
-              </div>
-            </div>
-            <div>
-              <Field label="Hue Torsion">
-                <div className={styles.slider}>
-                  <Slider size="small" min={-50} max={50} value={hueTorsion} onChange={handleHueTorsionChange} />
-                  <Input
-                    size="small"
-                    type="number"
-                    min={-50}
-                    max={50}
-                    appearance="outline"
-                    value={hueTorsion.toString()}
-                    onChange={handleHueTorsionChange}
-                  />
-                </div>
-              </Field>
-            </div>
-            <div>
-              <Field label="Vibrancy">
-                <div className={styles.slider}>
-                  <Slider size="small" min={-50} max={50} value={vibrancy} onChange={handleVibrancyChange} />
-                  <Input
-                    size="small"
-                    type="number"
-                    min={-50}
-                    max={50}
-                    appearance="outline"
-                    value={vibrancy.toString()}
-                    onChange={handleVibrancyChange}
-                  />
-                </div>
-              </Field>
-            </div>
-          </AccordionPanel>
-        </AccordionItem>
-        <AccordionItem value="2">
-          <AccordionHeader size="large">Step 2 - Export</AccordionHeader>
-          <AccordionPanel className={styles.accordionContainer}>
-          <Text as="h6">Enter a desired theme name below and click the Export button to export your theme</Text>
-            <div className={styles.labelName}>
-              <Field label={'Theme name'}>
-                <Input
-                  appearance="outline"
-                  id={themeNameInputId}
-                  onChange={handleThemeNameChange}
-                  placeholder={defaultThemePlaceholderName}
-                  value={themeName === defaultThemePlaceholderName ? '' : themeName}
+      <div className={styles.inputs}>
+        <div className={styles.labels}>
+          <Field label="Key color value">
+            <Input
+              appearance="outline"
+              value={keyColor}
+              onChange={handleKeyColorChange}
+              maxLength={7}
+              onBlur={handleKeyColorBlur}
+              style={{ width: '100px' }}
+              />
+            </Field>
+            <Field label="Color Picker">
+              <div className={styles.colorPicker} style={{ backgroundColor: keyColor }}>
+                <input
+                  className={styles.color}
+                  type="color"
+                  id={sidebarId + 'keyColor Color'}
+                  onChange={handleKeyColorChange}
                 />
-              </Field>
-            </div>
-            <Button size="small" appearance="primary" onClick={showExportButton}>Export</Button>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+              </div>
+          </Field>
+        </div>
+      </div>
+      <div>
+        <Field label="Hue Torsion">
+          <div className={styles.slider}>
+            <Slider size="small" min={-50} max={50} value={hueTorsion} onChange={handleHueTorsionChange} />
+            <Input
+              size="small"
+              type="number"
+              min={-50}
+              max={50}
+              appearance="outline"
+              value={hueTorsion.toString()}
+              onChange={handleHueTorsionChange}
+            />
+          </div>
+        </Field>
+      </div>
+      <div>
+        <Field label="Vibrancy">
+          <div className={styles.slider}>
+            <Slider size="small" min={-50} max={50} value={vibrancy} onChange={handleVibrancyChange} />
+            <Input
+              size="small"
+              type="number"
+              min={-50}
+              max={50}
+              appearance="outline"
+              value={vibrancy.toString()}
+              onChange={handleVibrancyChange}
+            />
+          </div>
+        </Field>
+      </div>
+      <div className={styles.header}>
+        <Subtitle2>Step 2 - Export</Subtitle2>
+        <Caption1 as="h6">Enter a desired theme name below and click the Export button to export your theme</Caption1>
+      </div>
+      <div className={styles.labelName}>
+        <Field label={'Theme name'}>
+          <Input
+            appearance="outline"
+            id={themeNameInputId}
+            onChange={handleThemeNameChange}
+            placeholder={defaultThemePlaceholderName}
+            value={themeName === defaultThemePlaceholderName ? '' : themeName}
+          />
+        </Field>
+      </div>
+      <Button size="small" appearance="primary" onClick={showExportButton}>Export</Button>
     </div>
   );
 };
