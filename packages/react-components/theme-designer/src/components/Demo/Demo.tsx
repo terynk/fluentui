@@ -53,19 +53,22 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gap: tokens.spacingVerticalS,
   },
-  controlRow: {
+  textAndSwitch: {
     gridArea: '1 / 2 / 2 / 3',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'start',
     justifyContent: 'center',
+    justifySelf: 'center',
     gap: tokens.spacingHorizontalL,
   },
   slider: {
     gridArea: '2 / 2 / 3 / 3',
     padding: tokens.spacingVerticalS,
+    width: '200px',
+    justifySelf: 'center',
   },
-  controlColumn: {
+  switchButtons: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'start',
@@ -154,9 +157,9 @@ export const Demo: React.FC<ContentProps> = props => {
           <Option value="Action 3">Action 3</Option>
         </Dropdown>
       </div>
-      <div className={stickerSheetStyles.controlRow}>
+      <div className={stickerSheetStyles.textAndSwitch}>
         <Button appearance="primary">Text</Button>
-        <div className={stickerSheetStyles.controlColumn}>
+        <div className={stickerSheetStyles.switchButtons}>
           <Switch defaultChecked={true} label="On" />
           <Switch label="Off" />
         </div>
