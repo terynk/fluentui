@@ -54,7 +54,7 @@ const useStyles = makeStyles({
     display: 'flex',
     boxShadow: `inset 0 2px 4px ${tokens.colorNeutralShadowAmbient}, inset 0 2px 4px ${tokens.colorNeutralShadowKey}`,
     alignSelf: 'center',
-    justifySelf: 'center',
+    justifySelf: 'flex-start',
   },
   color: {
     padding: '0px',
@@ -184,6 +184,7 @@ export const Form: React.FC = () => {
               className={styles.colorValueInput}
             />
           </Field>
+          <Field label="Color Picker">
           <Button
             className={styles.colorPicker}
             style={{ backgroundColor: keyColor }}
@@ -197,6 +198,7 @@ export const Form: React.FC = () => {
             value={keyColor}
             onChange={handleKeyColorChange}
           />
+          </Field>
         </div>
       </div>
       <div>
