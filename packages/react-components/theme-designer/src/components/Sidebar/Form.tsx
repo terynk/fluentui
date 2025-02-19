@@ -32,12 +32,6 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
-  accordionContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    rowGap: tokens.spacingVerticalL,
-    minWidth: '200px',
-  },
   keyColor: {
     paddingLeft: '0px',
   },
@@ -49,12 +43,14 @@ const useStyles = makeStyles({
   },
   colorPicker: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
-    borderRadius: '25px',
     height: '45px',
     width: '45px',
-    overflow: 'hidden',
+    minWidth: 'min-content',
     cursor: 'pointer',
-    boxShadow: `inset 0 2px 4px ${tokens.colorNeutralShadowAmbient}, inset 0 2px 4px ${tokens.colorNeutralShadowKey}`
+    display: 'flex',
+    boxShadow: `inset 0 2px 4px ${tokens.colorNeutralShadowAmbient}, inset 0 2px 4px ${tokens.colorNeutralShadowKey}`,
+    alignSelf: 'center',
+    justifySelf: 'center',
   },
   color: {
     padding: '0px',
@@ -122,6 +118,10 @@ export const Form: React.FC = () => {
     setKeyColor(newHexColor);
   };
 
+  const triggerColorPicker = () => {
+    document.getElementById(sidebarId + 'keyColor Color')?.click();
+  };
+
   const handleKeyColorBlur = () => {
     // Force padding if they blur
     setKeyColor(keyColorHex.padEnd(6, '0'));
@@ -171,17 +171,21 @@ export const Form: React.FC = () => {
               onBlur={handleKeyColorBlur}
               style={{ width: '100px' }}
               />
-            </Field>
-            <Field label="Color Picker">
-              <div className={styles.colorPicker} style={{ backgroundColor: keyColor }}>
-                <input
-                  className={styles.color}
-                  type="color"
-                  id={sidebarId + 'keyColor Color'}
-                  onChange={handleKeyColorChange}
-                />
-              </div>
           </Field>
+          <Button
+            className={styles.colorPicker}
+            style={{ backgroundColor: keyColor}}
+            onClick={triggerColorPicker}
+            shape="circular"
+            />
+          <input
+            type="color"
+            id={sidebarId + 'keyColor Color'}
+            className={styles.color}
+            value={keyColor}
+            onChange={handleKeyColorChange}
+            style={{ display: 'none' }}
+          />
         </div>
       </div>
       <div>
