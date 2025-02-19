@@ -11,10 +11,14 @@ import {
   Field,
   Subtitle2Stronger,
   Subtitle2,
+  InfoLabel,
   Caption1
 } from '@fluentui/react-components';
 import { defaultThemePlaceholderName } from '../../Context/ThemeDesignerContext';
 import { useDebounce } from '../../utils/useDebounce';
+
+const LABELS_TEMPLATE_COLUMNS = '110px 100px';
+const SLIDER_TEMPLATE_COLUMNS = '115px 50px';
 
 const useStyles = makeStyles({
   root: {
@@ -23,9 +27,9 @@ const useStyles = makeStyles({
   },
   header: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     rowGap: tokens.spacingVerticalL,
-    paddingTop: '12px',
+    padding: '12px 0px'
   },
   inputs: {
     display: 'flex',
@@ -37,7 +41,7 @@ const useStyles = makeStyles({
   },
   labels: {
     display: 'grid',
-    gridTemplateColumns: '110px 100px',
+    gridTemplateColumns: LABELS_TEMPLATE_COLUMNS,
     columnGap: tokens.spacingVerticalL,
     paddingBottom: '12px'
   },
@@ -56,10 +60,14 @@ const useStyles = makeStyles({
     padding: '0px',
     border: 'none',
     opacity: '0',
+    display: 'none',
+  },
+  colorValueInput: {
+    width: '100px',
   },
   slider: {
     display: 'grid',
-    gridTemplateColumns: '115px 50px',
+    gridTemplateColumns: SLIDER_TEMPLATE_COLUMNS,
     columnGap: '15px',
   },
   labelName: {
@@ -158,7 +166,11 @@ export const Form: React.FC = () => {
       </Subtitle2Stronger>
       <div className={styles.header}>
         <Subtitle2>Step 1 - Color settings</Subtitle2>
-        <Caption1 as="h6">Use the Color Picker to select a color or enter a hex value in the text box below to generate a theme. Adjust the Hue Torsion and Vibrancy using the sliders below for further refinement.</Caption1>
+        <InfoLabel as='label'
+          info={
+            <Caption1 as="h6">Use the Color Picker to select a color or enter a hex value in the text box below to generate a theme. Adjust the Hue Torsion and Vibrancy using the sliders below for further refinement.</Caption1>
+          }>
+        </InfoLabel>
       </div>
       <div className={styles.inputs}>
         <div className={styles.labels}>
@@ -169,22 +181,21 @@ export const Form: React.FC = () => {
               onChange={handleKeyColorChange}
               maxLength={7}
               onBlur={handleKeyColorBlur}
-              style={{ width: '100px' }}
-              />
+              className={styles.colorValueInput}
+            />
           </Field>
           <Button
             className={styles.colorPicker}
-            style={{ backgroundColor: keyColor}}
+            style={{ backgroundColor: keyColor }}
             onClick={triggerColorPicker}
             shape="circular"
-            />
+          />
           <input
             type="color"
             id={sidebarId + 'keyColor Color'}
             className={styles.color}
             value={keyColor}
             onChange={handleKeyColorChange}
-            style={{ display: 'none' }}
           />
         </div>
       </div>
@@ -222,7 +233,10 @@ export const Form: React.FC = () => {
       </div>
       <div className={styles.header}>
         <Subtitle2>Step 2 - Export</Subtitle2>
-        <Caption1 as="h6">Enter a desired theme name below and click the Export button to export your theme</Caption1>
+        <InfoLabel as='label'
+          info={<Caption1 as="h6">Enter a desired theme name below and click the Export button to export your theme</Caption1>
+          }>
+        </InfoLabel>
       </div>
       <div className={styles.labelName}>
         <Field label={'Theme name'}>
