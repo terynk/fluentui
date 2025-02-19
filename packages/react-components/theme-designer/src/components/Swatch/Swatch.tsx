@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, mergeClasses } from '@griffel/react';
+import { makeStyles } from '@griffel/react';
 import {
   tokens,
   TabList,
@@ -27,10 +27,6 @@ import {
   CalendarLtrFilled,
   CalendarLtrRegular,
 } from '@fluentui/react-icons';
-
-export interface ContentProps {
-  className?: string;
-}
 
 const useStyles = makeStyles({
   root: {
@@ -116,28 +112,20 @@ const useStyles = makeStyles({
 
 const MeetNowIcon = bundleIcon(MeetNowFilled, MeetNowRegular);
 const CalendarLtrIcon = bundleIcon(CalendarLtrFilled, CalendarLtrRegular);
-/*
-  Note the state of the stickersheet is that we need consensus on the following post Build 2023:
-    1) Do we have all the correct components displayed and in the correct order?
-    2.a) Do we have all the states of each component displayed? i.e. missing deactive states?
-    2.b) Do was have all the variants of each component displayed? i.e. different sizes, colors, layouts etc?
-    3) Note that the spinner was removed since it was causing confusing with the loading state of the page
-*/
 
-export const Swatch: React.FC<ContentProps> = props => {
+export const Swatch: React.FC = () => {
   const stickerSheetStyles = useStyles();
   const dropdownId = useId('dropdown-default');
 
   return (
-    <div className={mergeClasses(stickerSheetStyles.root, props.className)}>
-      <div className={stickerSheetStyles.avatar}>
+    <div className={stickerSheetStyles.root}>
         <Persona
           name="Cameron Evans"
           secondaryText="Senior Researcher at Contoso"
           avatar={{ color: 'brand', badge: { status: 'available' } }}
+          className={stickerSheetStyles.avatar}
         />
-      </div>
-      <div className={stickerSheetStyles.tabList}>
+        <div className={stickerSheetStyles.tabList}>
         <TabList defaultSelectedValue="tab1">
           <Tab value="tab1">Home</Tab>
           <Tab value="tab2">Pages</Tab>
@@ -170,18 +158,14 @@ export const Swatch: React.FC<ContentProps> = props => {
           <Checkbox defaultChecked={true} label="Option 1" />
           <Checkbox label="Option 2" />
         </div>
-        <div className={stickerSheetStyles.radioGroup}>
-          <RadioGroup>
-            <Radio defaultChecked={true} label="Option 1" />
-            <Radio label="Option 2" />
-          </RadioGroup>
-        </div>
+        <RadioGroup className={stickerSheetStyles.radioGroup}>
+          <Radio defaultChecked={true} label="Option 1" />
+          <Radio label="Option 2" />
+        </RadioGroup>
       </div>
-      <div className={stickerSheetStyles.descriptionField}>
-        <Field label="Description" required>
-          <Input placeholder="Example Text" appearance="filled-darker" />
-        </Field>
-      </div>
+      <Field label="Description" required className={stickerSheetStyles.descriptionField}>
+        <Input placeholder="Example Text" appearance="filled-darker" />
+      </Field>
       <Link className={stickerSheetStyles.link} href="https://www.microsoft.com">
         Example link - www.microsoft.com
       </Link>
