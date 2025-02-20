@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Divider, FluentProvider, makeStyles, mergeClasses, tokens, Text, Caption1 } from '@fluentui/react-components';
-import { Demo } from '../Demo/Demo';
+import { Divider, FluentProvider, makeStyles, mergeClasses, tokens, Text, Subtitle2 } from '@fluentui/react-components';
+import { Swatch } from '../Swatch/Swatch';
 import { Palette } from '../Palette/Palette';
 import { ColorTokens } from '../ColorTokens/ColorTokens';
 import { useThemeDesigner } from '../../Context/ThemeDesignerContext';
@@ -46,9 +46,9 @@ export const Content: React.FC<ContentProps> = props => {
         <Palette />
         <div className={styles.sickerSheet}>
           <Divider />
-          <Caption1>Sticker sheet</Caption1>
+          <Subtitle2>Component Swatch</Subtitle2>
         </div>
-        <Demo />
+        <Swatch />
         <Divider />
         <ColorTokens />
       </div>
