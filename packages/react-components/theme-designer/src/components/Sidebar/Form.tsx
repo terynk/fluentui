@@ -258,7 +258,7 @@ export const Form: React.FC = () => {
           />
         </Field>
       </div>
-      <Button size="small" appearance="primary" onClick={showExportButton}>Export</Button>
+      <Button size="medium" appearance="primary" onClick={showExportButton}>Export</Button>
     </div>
   );
 };
