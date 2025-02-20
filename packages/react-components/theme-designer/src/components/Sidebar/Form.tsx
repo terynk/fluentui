@@ -55,12 +55,14 @@ const useStyles = makeStyles({
     boxShadow: `inset 0 2px 4px ${tokens.colorNeutralShadowAmbient}, inset 0 2px 4px ${tokens.colorNeutralShadowKey}`,
     alignSelf: 'center',
     justifySelf: 'flex-start',
+    '&:hover': {
+      boxShadow: `0 4px 8px ${tokens.colorNeutralShadowAmbient}, 0 4px 8px ${tokens.colorNeutralShadowKey}`,
+    },
   },
   color: {
     padding: '0px',
     border: 'none',
     opacity: '0',
-    display: 'none',
   },
   colorValueInput: {
     width: '100px',
@@ -88,7 +90,6 @@ const useStyles = makeStyles({
 const DELAY_INPUT = 20;
 export const Form: React.FC = () => {
   const styles = useStyles();
-  const sidebarId = useId();
 
   const {
     dispatch,
@@ -127,7 +128,20 @@ export const Form: React.FC = () => {
   };
 
   const triggerColorPicker = () => {
-    document.getElementById(sidebarId + 'keyColor Color')?.click();
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.style.cssText = styles.color;
+    document.body.appendChild(input);
+
+    input.addEventListener("input", (e) => {
+      handleKeyColorChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
+    });
+
+    input.addEventListener("change", () => {
+      document.body.removeChild(input);
+    });
+
+    input.click();
   };
 
   const handleKeyColorBlur = () => {
@@ -169,8 +183,7 @@ export const Form: React.FC = () => {
         <InfoLabel as='label'
           info={
             <Caption1 as="h6">Use the Color Picker to select a color or enter a hex value in the text box below to generate a theme. Adjust the Hue Torsion and Vibrancy using the sliders below for further refinement.</Caption1>
-          }>
-        </InfoLabel>
+          } />
       </div>
       <div className={styles.inputs}>
         <div className={styles.labels}>
@@ -190,13 +203,6 @@ export const Form: React.FC = () => {
             style={{ backgroundColor: keyColor }}
             onClick={triggerColorPicker}
             shape="circular"
-          />
-          <input
-            type="color"
-            id={sidebarId + 'keyColor Color'}
-            className={styles.color}
-            value={keyColor}
-            onChange={handleKeyColorChange}
           />
           </Field>
         </div>
@@ -237,8 +243,7 @@ export const Form: React.FC = () => {
         <Subtitle2>Step 2 - Export</Subtitle2>
         <InfoLabel as='label'
           info={<Caption1 as="h6">Enter a desired theme name below and click the Export button to export your theme</Caption1>
-          }>
-        </InfoLabel>
+          }/>
       </div>
       <div className={styles.labelName}>
         <Field label={'Theme name'}>
