@@ -47,8 +47,8 @@ const useStyles = makeStyles({
   },
   colorPicker: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
-    height: '45px',
-    width: '45px',
+    height: '32px',
+    width: '32px',
     minWidth: 'min-content',
     cursor: 'pointer',
     display: 'flex',
@@ -189,6 +189,7 @@ export const Form: React.FC = () => {
         <div className={styles.labels}>
           <Field label="Key color value">
             <Input
+              size="medium"
               appearance="outline"
               value={keyColor}
               onChange={handleKeyColorChange}
@@ -212,7 +213,7 @@ export const Form: React.FC = () => {
           <div className={styles.slider}>
             <Slider size="small" min={-50} max={50} value={hueTorsion} onChange={handleHueTorsionChange} />
             <Input
-              size="small"
+              size="medium"
               type="number"
               min={-50}
               max={50}
@@ -228,7 +229,7 @@ export const Form: React.FC = () => {
           <div className={styles.slider}>
             <Slider size="small" min={-50} max={50} value={vibrancy} onChange={handleVibrancyChange} />
             <Input
-              size="small"
+              size="medium"
               type="number"
               min={-50}
               max={50}
@@ -248,6 +249,7 @@ export const Form: React.FC = () => {
       <div className={styles.labelName}>
         <Field label={'Theme name'}>
           <Input
+            size="medium"
             appearance="outline"
             id={themeNameInputId}
             onChange={handleThemeNameChange}
