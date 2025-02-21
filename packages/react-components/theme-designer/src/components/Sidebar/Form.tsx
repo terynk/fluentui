@@ -3,75 +3,81 @@ import * as React from 'react';
 import { makeStyles } from '@griffel/react';
 import { useThemeDesigner } from '../../Context/ThemeDesignerContext';
 import {
-  Accordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
   Button,
   Input,
   Slider,
   tokens,
   useId,
-  Caption1Stronger,
   Field,
+  Subtitle2Stronger,
+  Subtitle2,
+  InfoLabel,
+  Caption1
 } from '@fluentui/react-components';
 import { defaultThemePlaceholderName } from '../../Context/ThemeDesignerContext';
-// import { AccessibilityPanel } from './AccessibilityPanel';
 import { useDebounce } from '../../utils/useDebounce';
+
+const LABELS_TEMPLATE_COLUMNS = '110px 100px';
+const SLIDER_TEMPLATE_COLUMNS = '115px 50px';
 
 const useStyles = makeStyles({
   root: {
-    backgroundColor: tokens.colorNeutralBackground3,
+    backgroundColor: tokens.colorNeutralBackground2,
+    padding: '12px'
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    rowGap: tokens.spacingVerticalL,
+    padding: '12px 0px'
   },
   inputs: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
-  accordionContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    rowGap: tokens.spacingVerticalL,
-    minWidth: '200px',
-  },
   keyColor: {
     paddingLeft: '0px',
   },
   labels: {
     display: 'grid',
-    gridTemplateColumns: '135px 30px',
+    gridTemplateColumns: LABELS_TEMPLATE_COLUMNS,
     columnGap: tokens.spacingVerticalL,
+    paddingBottom: '12px'
   },
   colorPicker: {
     border: `1px solid ${tokens.colorNeutralStroke1}`,
-    borderRadius: '25px',
-    height: '30px',
-    width: '30px',
-    overflow: 'hidden',
+    height: '32px',
+    width: '32px',
+    minWidth: 'min-content',
+    cursor: 'pointer',
+    display: 'flex',
+    boxShadow: `inset 0 2px 4px ${tokens.colorNeutralShadowAmbient}, inset 0 2px 4px ${tokens.colorNeutralShadowKey}`,
+    alignSelf: 'center',
+    justifySelf: 'flex-start',
+    '&:hover': {
+      boxShadow: `0 4px 8px ${tokens.colorNeutralShadowAmbient}, 0 4px 8px ${tokens.colorNeutralShadowKey}`,
+    },
   },
   color: {
     padding: '0px',
     border: 'none',
     opacity: '0',
   },
+  colorValueInput: {
+    width: '100px',
+  },
   slider: {
     display: 'grid',
-    gridTemplateColumns: '115px 50px',
+    gridTemplateColumns: SLIDER_TEMPLATE_COLUMNS,
     columnGap: '15px',
   },
-  element: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'center',
-  },
   labelName: {
-    // Stack the label above the field
     display: 'flex',
     flexDirection: 'column',
-    // Use 2px gap below the label (per the design system)
     gap: '2px',
-    // Prevent the example from taking the full width of the page (optional)
     maxWidth: '400px',
+    paddingBottom: '12px',
   },
   export: {
     alignItems: 'center',
@@ -84,19 +90,12 @@ const useStyles = makeStyles({
 const DELAY_INPUT = 20;
 export const Form: React.FC = () => {
   const styles = useStyles();
-  const sidebarId = useId();
 
   const {
     dispatch,
     state: { themeName, keyColorHex },
-    // - unused values from a11y panel.
-    // isDark, darkThemeOverrides, lightThemeOverrides, brand,
   } = useThemeDesigner();
   const themeNameInputId = useId('themeNameInputId');
-
-  // const handleIsDarkChange = () => {
-  //   dispatch({ type: 'isDark', payload: !isDark });
-  // };
 
   const [keyColor, setKeyColor] = React.useState<string>(keyColorHex);
   const [hueTorsion, setHueTorsion] = React.useState<number>(0);
@@ -126,6 +125,23 @@ export const Form: React.FC = () => {
     // check if the newly inputted hex code has a #
     const newHexColor = generateHexColor(e);
     setKeyColor(newHexColor);
+  };
+
+  const triggerColorPicker = () => {
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.style.cssText = styles.color;
+    document.body.appendChild(input);
+
+    input.addEventListener("input", (e) => {
+      handleKeyColorChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
+    });
+
+    input.addEventListener("change", () => {
+      document.body.removeChild(input);
+    });
+
+    input.click();
   };
 
   const handleKeyColorBlur = () => {
@@ -159,109 +175,90 @@ export const Form: React.FC = () => {
 
   return (
     <div className={styles.root} role="tabpanel" aria-labelledby="Edit">
-      <Accordion defaultOpenItems={['1', '2', '3']} multiple>
-        {/* `multiple` allows for toggle of collapse as well as open multiple panels */}
-        <AccordionItem value="1">
-          <AccordionHeader>
-            <Caption1Stronger>Step 1 - Color settings</Caption1Stronger>
-          </AccordionHeader>
-
-          <AccordionPanel className={styles.accordionContainer}>
-            <div className={styles.inputs}>
-              <div className={styles.labels}>
-                <Field label="Key color value">
-                  <Input
-                    className={styles.keyColor}
-                    size="large"
-                    appearance="underline"
-                    value={keyColor}
-                    onChange={handleKeyColorChange}
-                    maxLength={7}
-                    onBlur={handleKeyColorBlur}
-                  />
-                </Field>
-                <div className={styles.colorPicker} style={{ backgroundColor: keyColor }}>
-                  <input
-                    className={styles.color}
-                    type="color"
-                    id={sidebarId + 'keyColor Color'}
-                    onChange={handleKeyColorChange}
-                  />
-                </div>
-              </div>
-            </div>
-            <div>
-              <Field label="Hue Torsion">
-                <div className={styles.slider}>
-                  <Slider size="small" min={-50} max={50} value={hueTorsion} onChange={handleHueTorsionChange} />
-                  <Input
-                    size="small"
-                    type="number"
-                    min={-50}
-                    max={50}
-                    appearance="outline"
-                    value={hueTorsion.toString()}
-                    onChange={handleHueTorsionChange}
-                  />
-                </div>
-              </Field>
-            </div>
-            <div>
-              <Field label="Vibrancy">
-                <div className={styles.slider}>
-                  <Slider size="small" min={-50} max={50} value={vibrancy} onChange={handleVibrancyChange} />
-                  <Input
-                    size="small"
-                    type="number"
-                    min={-50}
-                    max={50}
-                    appearance="outline"
-                    value={vibrancy.toString()}
-                    onChange={handleVibrancyChange}
-                  />
-                </div>
-              </Field>
-            </div>
-          </AccordionPanel>
-        </AccordionItem>
-        {/*
-        The accessibility check is not adequate for the theme designer.
-        Removing it for now because we don't want people proceeding with a false sense of security.
-        <AccordionItem value="2">
-          <AccordionHeader>
-            <Caption1Stronger>Step 2 - Accessibility checks</Caption1Stronger>
-          </AccordionHeader>
-          <AccordionPanel className={styles.accordionContainer}>
-            <Switch checked={isDark} onChange={handleIsDarkChange} label={'Dark theme'} />
-            <AccessibilityPanel
-              darkThemeOverrides={darkThemeOverrides}
-              brand={brand}
-              lightThemeOverrides={lightThemeOverrides}
+      <Subtitle2Stronger as="h2">
+        Start Here
+      </Subtitle2Stronger>
+      <div className={styles.header}>
+        <Subtitle2>Step 1 - Color settings</Subtitle2>
+        <InfoLabel as='label'
+          info={
+            <Caption1 as="h6">Use the Color Picker to select a color or enter a hex value in the text box below to generate a theme. Adjust the Hue Torsion and Vibrancy using the sliders below for further refinement.</Caption1>
+          } />
+      </div>
+      <div className={styles.inputs}>
+        <div className={styles.labels}>
+          <Field label="Key color value">
+            <Input
+              size="medium"
+              appearance="outline"
+              value={keyColor}
+              onChange={handleKeyColorChange}
+              maxLength={7}
+              onBlur={handleKeyColorBlur}
+              className={styles.colorValueInput}
             />
-          </AccordionPanel>
-        </AccordionItem> */}
-        <AccordionItem value="2">
-          <AccordionHeader>
-            <Caption1Stronger>Step 2 - Export</Caption1Stronger>
-          </AccordionHeader>
-          <AccordionPanel className={styles.accordionContainer}>
-            <div className={styles.labelName}>
-              <Field label={'Theme name'}>
-                <Input
-                  appearance="outline"
-                  id={themeNameInputId}
-                  onChange={handleThemeNameChange}
-                  placeholder={defaultThemePlaceholderName}
-                  value={themeName === defaultThemePlaceholderName ? '' : themeName}
-                />
-              </Field>
-            </div>
-            <Button size="small" appearance="primary" onClick={showExportButton}>
-              Export
-            </Button>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+          </Field>
+          <Field label="Color Picker">
+          <Button
+            className={styles.colorPicker}
+            style={{ backgroundColor: keyColor }}
+            onClick={triggerColorPicker}
+            shape="circular"
+          />
+          </Field>
+        </div>
+      </div>
+      <div>
+        <Field label="Hue Torsion">
+          <div className={styles.slider}>
+            <Slider size="small" min={-50} max={50} value={hueTorsion} onChange={handleHueTorsionChange} />
+            <Input
+              size="medium"
+              type="number"
+              min={-50}
+              max={50}
+              appearance="outline"
+              value={hueTorsion.toString()}
+              onChange={handleHueTorsionChange}
+            />
+          </div>
+        </Field>
+      </div>
+      <div>
+        <Field label="Vibrancy">
+          <div className={styles.slider}>
+            <Slider size="small" min={-50} max={50} value={vibrancy} onChange={handleVibrancyChange} />
+            <Input
+              size="medium"
+              type="number"
+              min={-50}
+              max={50}
+              appearance="outline"
+              value={vibrancy.toString()}
+              onChange={handleVibrancyChange}
+            />
+          </div>
+        </Field>
+      </div>
+      <div className={styles.header}>
+        <Subtitle2>Step 2 - Export</Subtitle2>
+        <InfoLabel as='label'
+          info={<Caption1 as="h6">Enter a desired theme name below and click the Export button to export your theme</Caption1>
+          }/>
+      </div>
+      <div className={styles.labelName}>
+        <Field label={'Theme name'}>
+          <Input
+            size="medium"
+            appearance="outline"
+            id={themeNameInputId}
+            onChange={handleThemeNameChange}
+            placeholder={defaultThemePlaceholderName}
+            value={themeName === defaultThemePlaceholderName ? '' : themeName}
+          />
+        </Field>
+      </div>
+      <Button size="medium" appearance="primary" onClick={showExportButton}>Export</Button>
     </div>
   );
 };
